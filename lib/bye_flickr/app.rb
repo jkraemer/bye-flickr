@@ -66,7 +66,7 @@ module ByeFlickr
     def download_collection(collection)
       dir = subdir collection.title
       FileUtils.mkdir_p dir
-      write_info collection, @basedir.join("#{collection.title}.json")
+      write_info collection, path("#{collection.title}.json")
       collection.set.each do |set|
         download_set set, dir
       end
@@ -99,7 +99,7 @@ module ByeFlickr
         name = photo.title
         name = name + '.jpg' unless name =~ /\.jpg$/i
         name = "#{photo.id}.jpg"
-        @downloader.add_image photo.url_o, dir.join(name).to_s
+        @downloader.add_image photo.url_o, path(name, dir).to_s
       end
 
       photos.each do |photo|
