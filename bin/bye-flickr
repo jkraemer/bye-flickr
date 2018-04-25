@@ -1,0 +1,44 @@
+#!/usr/bin/env ruby
+
+require 'bye_flickr'
+require 'slop'
+
+o = Slop::Options.new
+
+o.separator 'Required arguments (create API key and secret in the Flickr web interface):'
+o.string '-d', '--dir', 'directory to store data', required: true
+o.string '-k', '--key', 'API key', required: true
+o.string '-s', '--secret', 'API secret', required: true
+
+o.separator ''
+o.separator 'Optional arguments, if you already have authorized the app:'
+o.string '--at', 'Access token'
+o.string '--as', 'Access token secret'
+
+o.separator ''
+o.separator 'Other commands:'
+o.on '--version', 'print the version' do
+  puts ByeFlickr::VERSION
+  exit
+end
+o.on '-h', '--help' do
+  puts o
+  exit
+end
+
+begin
+  opts = Slop::Parser.new(o).parse ARGV
+rescue Slop::Error
+  puts $!
+  puts o
+  exit
+end
+
+FlickRaw.api_key = opts[:key]
+FlickRaw.shared_secret = opts[:secret]
+
+flickr.access_token = opts[:at] if opts[:at]
+flickr.access_secret = opts[:as] if opts[:as]
+
+ByeFlickr::App.new(dir: opts[:dir]).run
+
