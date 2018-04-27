@@ -22,6 +22,32 @@ module ByeFlickr
       @id = user[:id]
       exit if @username.nil? || @id.nil?
 
+      # Download photos that are not in any set
+      download_not_in_set
+
+      # Get collection info
+      @collections = flickr.collections.getTree
+      write_info(
+        @collections, path('collections.json')
+      )
+
+      # Get sets info
+      @sets = Hash[
+        flickr.photosets.getList(per_page: 500).photoset.map{|s|[s.id, s]}
+      ]
+
+      # Download collections and their included sets, removing downloaded sets
+      # from the @sets list
+      @collections.collection.each do |collection|
+        download_collection collection
+      end
+
+      # download the remaining sets, which aren't in any collection
+      @sets.values.each do |set|
+        download_set set, @basedir
+      end
+
+      # Fetch contacts and groups meta data
       write_info(
         flickr.contacts.getList, path('contacts.json')
       )
@@ -29,17 +55,7 @@ module ByeFlickr
         flickr.people.getGroups(user_id: @id), path('groups.json')
       )
 
-      @collections = flickr.collections.getTree
-      write_info(
-        @collections, path('collections.json')
-      )
-
-      download_not_in_set
-
-      @collections.collection.each do |collection|
-        download_collection collection
-      end
-
+      # wait for photo downloads to finish
       @downloader.wait
     end
 
@@ -68,6 +84,7 @@ module ByeFlickr
       write_info collection, path("#{collection.title}.json")
       collection.set.each do |set|
         download_set set, dir
+        @sets.delete set.id # remove this set from the lists of sets to download
       end
     end
 
