@@ -85,11 +85,12 @@ module ByeFlickr
       end
 
       def run
-        while @downloader.running? do
-          if file = @downloader.next
+        while file = @downloader.next or @downloader.running? do
+          if file
             @downloader.download(file)
             print '.'
           else
+            # queue is empty but we're still running, wait a bit and try again
             sleep 1
           end
         end
