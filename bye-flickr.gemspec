@@ -1,15 +1,15 @@
 require_relative 'lib/bye_flickr/version'
 
 Gem::Specification.new do |s|
-  s.name        = 'bye_flickr'
+  s.name        = 'bye-flickr'
   s.version     = ByeFlickr::VERSION
   s.executables << 'bye-flickr'
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Jens Krämer"]
   s.email       = ["jk@jkraemer.net"]
   s.homepage    = "http://github.com/jkraemer/bye_flickr"
-  s.summary     = %q{Download all photos and metadata from your flickr account.}
-  s.description = %q{With Flickr facing an uncertain future in the hands of competitor SmugMug I decided it was time to leave the sinking ship. This gem will download all your collections, sets and photos not organized in any set as well. Metadata is stored in json files, one per image file. Collection / Set metadata is stored as JSON files, as well.}
+  s.summary     = %q{Download all photos and metadata from your Flickr account.}
+  s.description = %q{This gem will download all photos and as much metadata as possible from your Flickr account. Metadata is stored in json files, one file per photo. Collection / Set metadata and your group subscriptions and contacts are stored as JSON files, as well.}
   s.licenses    = ['MIT']
 
   s.required_rubygems_version = ">= 2.0"

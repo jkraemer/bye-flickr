@@ -5,7 +5,6 @@ require 'bye_flickr/auth'
 require 'bye_flickr/photo_downloader'
 require 'bye_flickr/response_to_json'
 
-# weiter: hierarchische verzeichnisstruktur nach collections
 module ByeFlickr
   class App
     def initialize(dir: '.')
@@ -35,11 +34,11 @@ module ByeFlickr
         @collections, path('collections.json')
       )
 
+      download_not_in_set
+
       @collections.collection.each do |collection|
         download_collection collection
       end
-
-      download_not_in_set
 
       @downloader.wait
     end
@@ -87,6 +86,9 @@ module ByeFlickr
         flickr.photosets.getInfo(photoset_id: set.id),
         path("#{set.title}.json", basedir)
       )
+    rescue Net::OpenTimeout
+      puts "#{$!} - retrying to download Set #{set.title}"
+      retry
     end
 
     def write_info(info, path)
