@@ -14,9 +14,6 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = ">= 2.0"
 
-  # required for validation
-  s.rubyforge_project         = "bye-flickr"
-
   # If you have other dependencies, add them here
   s.add_dependency "flickraw", "~> 0.9"
   s.add_dependency "net-http-persistent", "~> 3.0"
